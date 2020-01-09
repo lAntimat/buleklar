@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:buleklar/IUserRepository.dart';
 import 'package:meta/meta.dart';
 import 'package:buleklar/authentication_bloc/bloc.dart';
 import 'package:buleklar/user_repository.dart';
@@ -8,7 +9,7 @@ class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final UserRepository _userRepository;
 
-  AuthenticationBloc({@required UserRepository userRepository})
+  AuthenticationBloc({@required IUserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository;
 
@@ -33,7 +34,7 @@ class AuthenticationBloc
       final isSignedIn = await _userRepository.isSignedIn();
       if (isSignedIn) {
         final name = await _userRepository.getUser();
-        yield Authenticated(name);
+        yield Authenticated();
       } else {
         yield Unauthenticated();
       }
@@ -43,7 +44,7 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedInToState() async* {
-    yield Authenticated(await _userRepository.getUser());
+    yield Authenticated();
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {

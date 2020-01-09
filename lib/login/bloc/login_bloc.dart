@@ -79,7 +79,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       await _userRepository.signInWithCredentials(email, password);
       yield LoginState.success();
-    } catch (_) {
+    } catch (error) {
+      print("login error $error");
       yield LoginState.failure();
     }
   }

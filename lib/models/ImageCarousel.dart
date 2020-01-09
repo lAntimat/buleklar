@@ -12,4 +12,11 @@ class ImageCarousel {
     return new ImageCarousel.withId(
         d.documentID, d["title"], d["url"], d["order"]);
   }
+
+  @override
+  String toString() {
+    return title;
+  }
+
+
 }

@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'package:buleklar/IUserRepository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class UserRepository {
+class UserRepository implements IUserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
@@ -22,6 +23,7 @@ class UserRepository {
     return _firebaseAuth.currentUser();
   }
 
+  @override
   Future<void> signInWithCredentials(String email, String password) {
     return _firebaseAuth.signInWithEmailAndPassword(
       email: email,
@@ -29,6 +31,7 @@ class UserRepository {
     );
   }
 
+  @override
   Future<void> signUp({String email, String password}) async {
     return await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
@@ -36,6 +39,7 @@ class UserRepository {
     );
   }
 
+  @override
   Future<void> signOut() async {
     return Future.wait([
       _firebaseAuth.signOut(),
@@ -43,11 +47,13 @@ class UserRepository {
     ]);
   }
 
+  @override
   Future<bool> isSignedIn() async {
     final currentUser = await _firebaseAuth.currentUser();
     return currentUser != null;
   }
 
+  @override
   Future<String> getUser() async {
     return (await _firebaseAuth.currentUser()).email;
   }

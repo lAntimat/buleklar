@@ -1,19 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>buleklar</title>
+    <meta charset="UTF-8">
+    <title>buleklar</title>
 </head>
 <body>
-  <script src="main.dart.js" type="application/javascript"></script>
 
-  <!-- The core Firebase JS SDK is always required and must be listed first -->
-  <script src="/__/firebase/7.6.1/firebase-app.js"></script>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
 
-  <!-- TODO: Add SDKs for Firebase products that you want to use
-       https://firebase.google.com/docs/web/setup#available-libraries -->
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-auth.js"></script>
 
-  <!-- Initialize Firebase -->
-  <script src="/__/firebase/init.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDOvY2AncGSchz6eY-mj7iEuwiKZBic2eI",
+    authDomain: "algacar-f6f3c.firebaseapp.com",
+    databaseURL: "https://algacar-f6f3c.firebaseio.com",
+    projectId: "algacar-f6f3c",
+    storageBucket: "algacar-f6f3c.appspot.com",
+    messagingSenderId: "497804999350",
+    appId: "1:497804999350:web:7331571cdfe91992540417",
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+</script>
+
+<script src="main.dart.js" type="application/javascript"></script>
+
 </body>
 </html>

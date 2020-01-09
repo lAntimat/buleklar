@@ -6,11 +6,19 @@ class Validators {
     r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$',
   );
 
+  static final RegExp _digitsRexExp = RegExp(
+    r'^[0-9]+$',
+  );
+
   static isValidEmail(String email) {
     return _emailRegExp.hasMatch(email);
   }
 
   static isValidPassword(String password) {
     return _passwordRegExp.hasMatch(password);
+  }
+
+  static isDigits(String digits) {
+    return _digitsRexExp.hasMatch(digits);
   }
 }
