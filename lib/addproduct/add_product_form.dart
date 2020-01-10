@@ -6,7 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'bloc.dart';
+import 'bloc/bloc.dart';
 
 class AddProductForm extends StatefulWidget {
   final UserRepository _userRepository;
@@ -116,6 +116,7 @@ class _AddProductFormState extends State<AddProductForm> {
                     autovalidate: true,
                     autocorrect: false,
                   ),
+                  Container(height: 8),
                   TextFormField(
                     controller: _priceController,
                     decoration: InputDecoration(
@@ -126,6 +127,7 @@ class _AddProductFormState extends State<AddProductForm> {
                     autovalidate: true,
                     autocorrect: false,
                   ),
+                  Container(height: 8),
                   TextFormField(
                     controller: _imgUrlController,
                     decoration: InputDecoration(
@@ -145,7 +147,6 @@ class _AddProductFormState extends State<AddProductForm> {
                           onPressed: _onFormSubmitted,
                           child: Text("Добавить"),
                         ),
-                        CreateAccountButton(userRepository: _userRepository),
                       ],
                     ),
                   ),

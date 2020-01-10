@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:buleklar/user_repository.dart';
 import 'package:buleklar/login/login.dart';
 
-import 'bloc.dart';
+import 'bloc/bloc.dart';
 
 class AddProductScreen extends StatelessWidget {
   final UserRepository _userRepository;

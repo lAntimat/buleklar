@@ -35,7 +35,7 @@ class GiftsRepository {
     return result;
   }
 
-  Future<List<ProductItem>> getCategories() async {
+  Future<List<ProductItem>> getProducts() async {
     var result;
     await _firestore
         .collection("gifts")
@@ -52,6 +52,21 @@ class GiftsRepository {
       }
     }).catchError((onError) {
       throw onError;
+    });
+
+    return result;
+  }
+
+  Future<ProductItem> getProduct(String id) async {
+    var result;
+    await _firestore
+        .collection("gifts").document(id).get()
+        .then((data) {
+      if (data.data.isNotEmpty == true) {
+        result = ProductItem.fromDocument(data.documentID, data.data);
+      } else {
+        throw "empty categories";
+      }
     });
 
     return result;

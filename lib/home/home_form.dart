@@ -5,6 +5,8 @@ import 'package:buleklar/gifts_repository.dart';
 import 'package:buleklar/home/bloc/bloc.dart';
 import 'package:buleklar/home/carousel_widget.dart';
 import 'package:buleklar/models/ProductItem.dart';
+import 'package:buleklar/productdetail/product_detail_form.dart';
+import 'package:buleklar/productdetail/product_detail_screen.dart';
 import 'package:buleklar/user_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -33,22 +35,16 @@ class _HomeFormState extends State<HomeForm> {
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
         if (state.isFabClicked) {
-          /*Scaffold.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Клик по кнопке'),
-                    CircularProgressIndicator(),
-                  ],
-                ),
-              ),
-            );*/
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) {
               return AddProductScreen(userRepository: UserRepository(), giftsRepository: GiftsRepository());
+            }),
+          );
+        }
+        if (state.isProductClicked) {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) {
+              return ProductDetailScreen(id: state.clickedId, userRepository: UserRepository(), giftsRepository: GiftsRepository());
             }),
           );
         }
@@ -64,11 +60,11 @@ class _HomeFormState extends State<HomeForm> {
                 children: <Widget>[
                   state.carouselItems.length > 0
                       ? CarouselWidget(state.carouselItems).build()
-                      : Container(),
+                      : Container(height: 0,),
                   Container(height: 16.0,),
                   state.categories.length > 0
                       ? getGridList(state.categories)
-                      : Container(),
+                      : Container(height: 0,),
                 ],
               ),
             ),
@@ -85,34 +81,41 @@ class _HomeFormState extends State<HomeForm> {
         physics: NeverScrollableScrollPhysics(),
         children: List.generate(items.length, (index) {
           var item = items[index];
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Stack(
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 1,
-                  child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    imageUrl: item.image.large,
-                  ),
-                ),
-                Align(
-                  child: Container(
-                    width: double.infinity,
-                    color: AppColors.mainBackground.withOpacity(0.7),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        item.name,
-                        style: TextStyle(color: AppColors.white),
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                      maxLines: 2,),
+          return GestureDetector(
+            onTap: () {
+              BlocProvider.of<HomeBloc>(context).add(
+                ProductClicked(item.id),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Stack(
+                children: <Widget>[
+                  AspectRatio(
+                    aspectRatio: 1,
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      imageUrl: item.image.large,
                     ),
                   ),
-                  alignment: Alignment.bottomCenter,
-                )
-              ],
+                  Align(
+                    child: Container(
+                      width: double.infinity,
+                      color: AppColors.mainBackground.withOpacity(0.7),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          item.name,
+                          style: TextStyle(color: AppColors.white),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        maxLines: 2,),
+                      ),
+                    ),
+                    alignment: Alignment.bottomCenter,
+                  )
+                ],
+              ),
             ),
           );
         }));

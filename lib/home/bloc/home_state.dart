@@ -8,6 +8,8 @@ class HomeState {
   final bool isSuccess;
   final bool isFailure;
   final bool isFabClicked;
+  final bool isProductClicked;
+  final String clickedId;
   final String errorText;
   final List<ImageCarousel> carouselItems;
   final List<ProductItem> categories;
@@ -18,6 +20,8 @@ class HomeState {
       @required this.carouselItems,
       @required this.categories,
       @required this.isFabClicked,
+      @required this.isProductClicked,
+      @required this.clickedId,
       @required this.errorText});
 
   factory HomeState.empty() {
@@ -28,6 +32,8 @@ class HomeState {
       carouselItems: <ImageCarousel>[],
       categories: <ProductItem>[],
       isFabClicked: false,
+      isProductClicked: false,
+      clickedId: null,
     );
   }
 
@@ -39,6 +45,8 @@ class HomeState {
       carouselItems: <ImageCarousel>[],
       categories: <ProductItem>[],
       isFabClicked: false,
+      isProductClicked: false,
+      clickedId: null,
     );
   }
 
@@ -50,11 +58,20 @@ class HomeState {
       carouselItems: <ImageCarousel>[],
       categories: <ProductItem>[],
       isFabClicked: false,
+      isProductClicked: false,
+      clickedId: null,
     );
   }
 
   factory HomeState.fabClicked(HomeState homeState) {
     return homeState;
+  }
+
+  HomeState productClicked(String id) {
+    return copyWith(
+      clickedId: id,
+      isProductClicked: true
+    );
   }
 
   factory HomeState.dataLoaded(
@@ -66,6 +83,8 @@ class HomeState {
       errorText: "",
       carouselItems: carouselItems,
       categories: items,
+      isProductClicked: false,
+      clickedId: null,
     );
   }
 
@@ -76,6 +95,8 @@ class HomeState {
     bool isFailure,
     String errorText,
     bool isFabClicked,
+    bool isProductClicked,
+    String clickedId,
   }) {
     return HomeState(
       isSuccess: isSuccess ?? this.isSuccess,
@@ -84,6 +105,8 @@ class HomeState {
       carouselItems: carouselItems ?? this.carouselItems,
       categories: categories ?? this.categories,
       isFabClicked: isFabClicked ?? this.isFabClicked,
+      isProductClicked: isProductClicked ?? this.isProductClicked,
+      clickedId: clickedId ?? this.clickedId,
     );
   }
 

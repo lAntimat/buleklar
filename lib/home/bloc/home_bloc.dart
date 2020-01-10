@@ -38,6 +38,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _mapLoadCategoriesToState(state);
     } else if(event is FabClicked) {
       yield* _mapFabClickedToState(state);
+    } else if(event is ProductClicked) {
+      yield* _mapProductClickedToState(event.id);
+
     }
   }
 
@@ -54,7 +57,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _mapLoadCategoriesToState(HomeState currentState) async* {
     yield HomeState.loading();
     try {
-      var items = await _giftRepository.getCategories();
+      var items = await _giftRepository.getProducts();
       yield HomeState.dataLoaded(carouselItems: currentState.carouselItems, items: items);
     } catch (error) {
       yield HomeState.failure(error: error);
@@ -63,5 +66,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Stream<HomeState> _mapFabClickedToState(HomeState currentState) async* {
     yield HomeState.fabClicked(currentState.copyWith(isFabClicked: true));
+  }
+
+  Stream<HomeState> _mapProductClickedToState(String id) async* {
+    yield state.productClicked(id);
   }
 }
