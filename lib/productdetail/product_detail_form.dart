@@ -1,8 +1,5 @@
-import 'package:buleklar/authentication_bloc/bloc.dart';
 import 'package:buleklar/common/busy_overlay.dart';
-import 'package:buleklar/login/login.dart';
 import 'package:buleklar/models/ProductItem.dart';
-import 'package:buleklar/user_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +18,6 @@ class ProductDetailForm extends StatefulWidget {
 }
 
 class _ProductDetailFormState extends State<ProductDetailForm> {
-
   ProductDetailBloc _productDetailBloc;
 
   @override
@@ -34,28 +30,41 @@ class _ProductDetailFormState extends State<ProductDetailForm> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<ProductDetailBloc, ProductDetailState>(
-      listener: (context, state) {
-
-      },
+      listener: (context, state) {},
       child: BlocBuilder<ProductDetailBloc, ProductDetailState>(
         builder: (context, state) {
           return BusyOverlay(
-            show: state.isLoading,
-            child: Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Container(
-                child: Text(state.productItem.name ?? "Загрузочка"),
-              )
-            ),
+              show: state.isLoading,
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: !state.isLoading ? getPageView(state.productItem.images): Container(),
+              ));
+        },
+      ),
+    );
+  }
+
+  Widget getPageView(List<Images> images) {
+    return Container(
+      child: PageView.builder(
+        itemBuilder: (context, position) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+                child: CachedNetworkImage(
+                  placeholder: (context, url) => Container(height: 10, width: 10, child: CircularProgressIndicator()),
+                    imageUrl:
+                    images[position].medium ?? "",
+                    height: 200)),
           );
         },
+        itemCount: images.length, // Can be null
       ),
     );
   }
 
   @override
   void dispose() {
-
     super.dispose();
   }
 }

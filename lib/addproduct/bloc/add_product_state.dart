@@ -8,7 +8,8 @@ class AddProductState {
   final bool isSubmitting;
   final bool isSuccess;
   final bool isFailure;
-  final Images image;
+  final bool imageLoading;
+  final List<Images> images;
 
   bool get isFormValid => isPriceValid;
 
@@ -17,7 +18,8 @@ class AddProductState {
     @required this.isSubmitting,
     @required this.isSuccess,
     @required this.isFailure,
-    @required this.image,
+    @required this.imageLoading,
+    @required this.images,
   });
 
   factory AddProductState.empty() {
@@ -26,7 +28,8 @@ class AddProductState {
       isSubmitting: false,
       isSuccess: false,
       isFailure: false,
-      image: null,
+      imageLoading: false,
+      images: List(),
     );
   }
 
@@ -74,12 +77,18 @@ class AddProductState {
   }
 
   AddProductState updateImgUrl({
-    Images image,
+    List<Images> image,
   }) {
     return copyWith(
       isFailure: false,
       isSuccess: false,
       image: image,
+    );
+  }
+
+  AddProductState imgLoading(bool loading) {
+    return copyWith(
+      imageLoading: loading,
     );
   }
 
@@ -90,14 +99,16 @@ class AddProductState {
     bool isSubmitting,
     bool isSuccess,
     bool isFailure,
-    Images image,
+    bool imageLoading,
+    List<Images> image,
   }) {
     return AddProductState(
       isPriceValid: isPriceValid ?? this.isPriceValid,
       isSubmitting: isSubmitting ?? this.isSubmitting,
       isSuccess: isSuccess ?? this.isSuccess,
       isFailure: isFailure ?? this.isFailure,
-      image: image ?? this.image,
+      imageLoading: imageLoading ?? this.imageLoading,
+      images: image ?? this.images,
     );
   }
 
@@ -108,7 +119,8 @@ class AddProductState {
       isSuccess: $isSuccess,
       isSubmitting: $isSubmitting,
       isFailure: $isFailure,
-      images: $image,
+      imageLoading: $imageLoading,
+      images: $images,
     }''';
   }
 }

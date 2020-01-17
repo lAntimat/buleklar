@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:buleklar/models/ProductItem.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -70,5 +72,21 @@ class AddProductPressed extends AddProductEvent {
   @override
   String toString() {
     return 'AddProductPressed { productItem: $productItem}';
+  }
+}
+
+class LoadFilePressed extends AddProductEvent {
+  final File img;
+
+  const LoadFilePressed({
+    @required this.img,
+  });
+
+  @override
+  List<Object> get props => [img];
+
+  @override
+  String toString() {
+    return 'LoadFilePressed { img: $img}';
   }
 }

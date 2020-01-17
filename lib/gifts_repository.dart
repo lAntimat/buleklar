@@ -1,10 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:buleklar/models/ImageCarousel.dart';
 import 'package:buleklar/models/ProductItem.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:insta_html_parser/insta_html_parser.dart';
+import 'package:path/path.dart' as Path;
 
 class GiftsRepository {
   final Firestore _firestore;
@@ -90,5 +91,20 @@ class GiftsRepository {
   Future<Images> parseInstragamPost(String url) async {
     var data = await InstaParser.photoUrlsFromPost(url);
     return Images.fromInstagram(data);
+  }
+
+  Future<String> uploadFile(File _image) async {
+    StorageReference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('images/${Path.basename(_image.path)}');
+    StorageUploadTask uploadTask = storageReference.putFile(_image);
+    uploadTask.events.listen((data) {
+      if(data.type == StorageTaskEventType.progress) {
+        print(data);
+      }
+    });
+    await uploadTask.onComplete;
+    print('File Uploaded');
+    return await storageReference.getDownloadURL();
   }
 }

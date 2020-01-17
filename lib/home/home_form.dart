@@ -52,20 +52,23 @@ class _HomeFormState extends State<HomeForm> {
       child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
         return BusyOverlay(
           show: state.isSuccess == false,
-          child: SingleChildScrollView(
-            child: Container(
-              color: AppColors.mainBackground,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  state.carouselItems.length > 0
-                      ? CarouselWidget(state.carouselItems).build()
-                      : Container(height: 0,),
-                  Container(height: 16.0,),
-                  state.categories.length > 0
-                      ? getGridList(state.categories)
-                      : Container(height: 0,),
-                ],
+          child: Container(
+            height: double.infinity,
+            color: AppColors.mainBackground,
+            child: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    state.carouselItems.length > 0
+                        ? CarouselWidget(state.carouselItems).build()
+                        : Container(height: 0,),
+                    Container(height: 16.0,),
+                    state.categories.length > 0
+                        ? getGridList(state.categories)
+                        : Container(height: 0,),
+                  ],
+                ),
               ),
             ),
           ),
@@ -95,7 +98,7 @@ class _HomeFormState extends State<HomeForm> {
                     aspectRatio: 1,
                     child: CachedNetworkImage(
                       fit: BoxFit.cover,
-                      imageUrl: item.image.large,
+                      imageUrl: item.images[0].large,
                     ),
                   ),
                   Align(

@@ -104,8 +104,8 @@ class HomeState {
       errorText: errorText ?? this.errorText,
       carouselItems: carouselItems ?? this.carouselItems,
       categories: categories ?? this.categories,
-      isFabClicked: isFabClicked ?? this.isFabClicked,
-      isProductClicked: isProductClicked ?? this.isProductClicked,
+      isFabClicked: isFabClicked ?? false,
+      isProductClicked: isProductClicked ?? false,
       clickedId: clickedId ?? this.clickedId,
     );
   }

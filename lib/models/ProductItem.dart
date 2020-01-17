@@ -1,22 +1,20 @@
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class ProductItem {
   String id;
   String name = "";
   String description = "";
   int price = 0;
-  Images image;
+  List<Images> images;
 
+  ProductItem(this.name, this.description, this.price, this.images);
 
-  ProductItem(this.name, this.description, this.price, this.image);
-
-  ProductItem.withId(this.id, this.name, this.description, this.price, this.image);
+  ProductItem.withId(
+      this.id, this.name, this.description, this.price, this.images);
 
   factory ProductItem.fromDocument(String id, Map<String, dynamic> d) {
-    return new ProductItem.withId(
-        id, d["name"], d["description"], d["price"], Images.fromMap(d["image"]));
+    return new ProductItem.withId(id, d["name"], d["description"], d["price"],
+        d["image"].map<Images>((d) => Images.fromMap(d)).toList());
   }
 
   @override
@@ -29,10 +27,9 @@ class ProductItem {
       'name': this.name,
       'description': this.description,
       'price': this.price,
-      'image': this.image.toMap(),
-  };
+      'image': this.images.map((f) => f.toMap()).toList(),
+    };
   }
-
 }
 
 class Images {
@@ -62,6 +59,4 @@ class Images {
       'large': this.large,
     };
   }
-
-
 }

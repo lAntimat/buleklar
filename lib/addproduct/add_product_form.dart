@@ -1,10 +1,11 @@
-import 'package:buleklar/authentication_bloc/bloc.dart';
-import 'package:buleklar/login/login.dart';
+import 'dart:io';
+
 import 'package:buleklar/models/ProductItem.dart';
 import 'package:buleklar/user_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'bloc/bloc.dart';
 
@@ -78,9 +79,23 @@ class _AddProductFormState extends State<AddProductForm> {
             );
         }
 
-        if (state.isSuccess) {
+        if (state.imageLoading) {
           Scaffold.of(context)
-            ..hideCurrentSnackBar();
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Загрузка изображения...'),
+                  ],
+                ),
+              ),
+            );
+        }
+
+        if (state.isSuccess) {
+          Scaffold.of(context)..hideCurrentSnackBar();
         }
       },
       child: BlocBuilder<AddProductBloc, AddProductState>(
@@ -147,6 +162,13 @@ class _AddProductFormState extends State<AddProductForm> {
                           onPressed: _onFormSubmitted,
                           child: Text("Добавить"),
                         ),
+                        Container(
+                          height: 8,
+                        ),
+                        FlatButton(
+                          onPressed: chooseFile,
+                          child: Text("Загрузить"),
+                        ),
                       ],
                     ),
                   ),
@@ -201,12 +223,47 @@ class _AddProductFormState extends State<AddProductForm> {
     );
   }
 
+  void onLoadFileClicked(File image) {
+    _addProductBloc.add(
+      LoadFilePressed(img: image),
+    );
+  }
+
   Widget getImage(AddProductState state) {
-    if(state.image == null) {
+    if (state.images == null) {
       return Image.asset('assets/flutter_logo.png', height: 200);
     } else {
-      if(state.image.medium.length > 5)return  CachedNetworkImage(imageUrl: state.image.medium ?? "", height: 200);
-      else return CircularProgressIndicator();
+      if (state.images.isNotEmpty) {
+        return Container(
+          height: 200,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, position) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                    child: (position == state.images.length)
+                        ? OutlineButton(
+                            child: Text("Добавить фото"), onPressed: chooseFile)
+                        : CachedNetworkImage(
+                            imageUrl: state.images[position].medium ?? "",
+                            height: 200)),
+              );
+            },
+            itemCount: state.images.length + 1, // Can be null
+          ),
+        );
+      } else
+        return CircularProgressIndicator();
     }
+  }
+
+  Future chooseFile() async {
+    await ImagePicker.pickImage(source: ImageSource.gallery, imageQuality: 50)
+        .then((imageFile) {
+      setState(() {
+        onLoadFileClicked(imageFile);
+      });
+    });
   }
 }

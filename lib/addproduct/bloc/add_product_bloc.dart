@@ -32,7 +32,10 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     Stream<AddProductState> Function(AddProductEvent event) next,
   ) {
     final nonDebounceStream = events.where((event) {
-      return (event is AddProductPressed);
+      return !(event is NameChanged ||
+          event is DescriptionChanged ||
+          event is PriceChanged ||
+          event is ImgUrlChanged);
     });
     final debounceStream = events.where((event) {
       return (event is NameChanged ||
@@ -53,7 +56,14 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     } else if (event is AddProductPressed) {
       yield* _mapAddProduct(event.productItem);
     } else if (event is ImgUrlChanged) {
-      var image = await _giftsRepository.parseInstragamPost(event.imgUrl);
+      //var image = await _giftsRepository.parseInstragamPost(event.imgUrl);
+      //yield* _mapImgUrl(image.medium);
+    } else if (event is LoadFilePressed) {
+      yield* mapImgLoading(true);
+      var image = await _giftsRepository.uploadFile(event.img)
+      .catchError((error) {
+        print(error);
+      });
       yield* _mapImgUrl(image);
     }
   }
@@ -64,16 +74,24 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     );
   }
 
-  Stream<AddProductState> _mapImgUrl(Images image) async* {
+  Stream<AddProductState> _mapImgUrl(String imgUrl) async* {
+    var images = List();
+    if(state.images != null) images = state.images;
+    images.add(Images(imgUrl, imgUrl, imgUrl));
+    yield state.imgLoading(false);
     yield state.updateImgUrl(
-        image: image
+        image: images
     );
+  }
+
+  Stream<AddProductState> mapImgLoading(bool loading) async* {
+    yield state.imgLoading(loading);
   }
 
   Stream<AddProductState> _mapAddProduct(ProductItem productItem) async* {
     try {
       yield state.submitting();
-      productItem.image = state.image;
+      productItem.images = state.images;
       await _giftsRepository.addProduct(productItem);
       yield state.itemAdded();
     } catch (_) {
